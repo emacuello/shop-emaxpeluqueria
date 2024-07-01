@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schemas/products.schemas';
 import { Model } from 'mongoose';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { UpdateStocks } from './dto/updateStocks';
 
 @Injectable()
 export class ProductsService {
@@ -43,5 +44,21 @@ export class ProductsService {
             image_url.push(uploadedImage.secure_url);
         }
         return image_url;
+    }
+    async updateStocks(updateDtop: UpdateStocks) {
+        return this.productModel
+            .updateMany(
+                { _id: { $in: updateDtop.ids } },
+                { $inc: { stock: -1 } },
+            )
+            .exec();
+    }
+    async newStock(updateDtop: UpdateStocks) {
+        return this.productModel
+            .updateMany(
+                { _id: { $in: updateDtop.ids } },
+                { $inc: { stock: +1 } },
+            )
+            .exec();
     }
 }

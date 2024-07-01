@@ -6,12 +6,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DATABASE_URL } from './config/env';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import * as morgan from 'morgan';
+import { JwtConfigModule } from './config/jwt.module';
 
 @Module({
     imports: [
         MongooseModule.forRoot(DATABASE_URL),
         ProductsModule,
         FileUploadModule,
+        JwtConfigModule,
     ],
     controllers: [AppController],
     providers: [AppService],

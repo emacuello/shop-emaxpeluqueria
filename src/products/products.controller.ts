@@ -1,21 +1,24 @@
 import {
     Controller,
-    Get,
     Post,
     Body,
-    Param,
     UseInterceptors,
     UploadedFiles,
+    UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductDto, FindOne } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { RolesGuard } from './guards/role.guard';
+import { UpdateStocks } from './dto/updateStocks';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
     @Post()
+    @UseGuards(RolesGuard)
     @UseInterceptors(FilesInterceptor('file', 10))
     create(
         @Body() createProductDto: CreateProductDto,
@@ -25,13 +28,25 @@ export class ProductsController {
         return this.productsService.create(createProductDto, files);
     }
 
-    @Get()
+    @MessagePattern({ cmd: 'findAllProducts' })
+    // @Get()
     findAll() {
         return this.productsService.findAll();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.productsService.findOne(id);
+    @MessagePattern({ cmd: 'findOneProduct' })
+    findOne(data: FindOne) {
+        console.log(data);
+
+        return this.productsService.findOne(data.id);
+    }
+
+    @MessagePattern({ cmd: 'restStock' })
+    updateStocks(data: UpdateStocks) {
+        return this.productsService.updateStocks(data);
+    }
+    @MessagePattern({ cmd: 'newStock' })
+    newStock(data: UpdateStocks) {
+        return this.productsService.newStock(data);
     }
 }
