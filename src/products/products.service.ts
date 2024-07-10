@@ -46,19 +46,23 @@ export class ProductsService {
         return image_url;
     }
     async updateStocks(updateDtop: UpdateStocks) {
-        return this.productModel
-            .updateMany(
-                { _id: { $in: updateDtop.ids } },
-                { $inc: { stock: -1 } },
-            )
-            .exec();
+        for (const product of updateDtop.products) {
+            await this.productModel
+                .updateOne(
+                    { _id: product._id },
+                    { $inc: { stock: -product.quantity } },
+                )
+                .exec();
+        }
     }
     async newStock(updateDtop: UpdateStocks) {
-        return this.productModel
-            .updateMany(
-                { _id: { $in: updateDtop.ids } },
-                { $inc: { stock: +1 } },
-            )
-            .exec();
+        for (const product of updateDtop.products) {
+            await this.productModel
+                .updateOne(
+                    { _id: product._id },
+                    { $inc: { stock: product.quantity } },
+                )
+                .exec();
+        }
     }
 }

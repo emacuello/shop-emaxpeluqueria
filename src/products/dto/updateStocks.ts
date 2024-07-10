@@ -1,3 +1,8 @@
 export class UpdateStocks {
-    ids: string[];
+    products: ProductId[];
+}
+
+interface ProductId {
+    _id: string;
+    quantity: number;
 }

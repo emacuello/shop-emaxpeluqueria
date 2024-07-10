@@ -11,7 +11,7 @@ import { CreateProductDto, FindOne } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from './guards/role.guard';
 import { UpdateStocks } from './dto/updateStocks';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('products')
 export class ProductsController {
@@ -29,24 +29,23 @@ export class ProductsController {
     }
 
     @MessagePattern({ cmd: 'findAllProducts' })
-    // @Get()
-    findAll() {
-        return this.productsService.findAll();
+    async findAll() {
+        return await this.productsService.findAll();
     }
 
     @MessagePattern({ cmd: 'findOneProduct' })
-    findOne(data: FindOne) {
+    async findOne(@Payload() data: FindOne) {
         console.log(data);
 
-        return this.productsService.findOne(data.id);
+        return await this.productsService.findOne(data.id);
     }
 
     @MessagePattern({ cmd: 'restStock' })
-    updateStocks(data: UpdateStocks) {
-        return this.productsService.updateStocks(data);
+    async updateStocks(@Payload() data: UpdateStocks) {
+        await this.productsService.updateStocks(data);
     }
     @MessagePattern({ cmd: 'newStock' })
-    newStock(data: UpdateStocks) {
-        return this.productsService.newStock(data);
+    async newStock(@Payload() data: UpdateStocks) {
+        await this.productsService.newStock(data);
     }
 }
