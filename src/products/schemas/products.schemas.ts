@@ -22,7 +22,7 @@ export class Product {
     })
     image: string[];
 
-    @Prop({ default: 100 })
+    @Prop({ default: 1000 })
     stock: number;
     @Prop({ default: 0 })
     offerprice: number;
