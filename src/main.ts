@@ -12,6 +12,9 @@ async function bootstrap() {
             host: HOST_REDIS,
             port: Number(PORT_REDIS),
             password: PASSWORD_REDIS,
+            tls: {
+                rejectUnauthorized: false,
+            },
         },
     });
 
