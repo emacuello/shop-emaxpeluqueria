@@ -25,3 +25,8 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/shop-emaxpeluqueria:latest
+            - name: Deploy to Dev - Render
+              uses: fjogeleit/http-request-action@v1
+              with:
+                  url: ${{ secrets.RENDER_DEPLOY_HOOK }}
+                  method: GET
